@@ -64,18 +64,16 @@ router.put('/:id', (req, res, next) => {
     err.status = 400;
     return next(err);
   }
-
-knex
-  .update(updateObj)
-  .from('notes')
-  .where('notes.id', iD)
-  .returning(['notes.id', 'title', 'content'])
-  .then(results => {
-    console.log(JSON.stringify(results[0], null, 2)); 
-  })
-  .catch(err => {
-    console.error(err);
-  });
+  knex
+    .update(updateObj)
+    .from('notes')
+    .where('notes.id', iD)
+    .returning(['notes.id', 'title', 'content'])
+    .then(results => res.json(results[0]))
+    .catch(err => {
+      console.error(err);
+    });
+  }); 
 // Post (insert) an item
 router.post('/', (req, res, next) => {
   const { title, content } = req.body;
@@ -94,7 +92,8 @@ router.post('/', (req, res, next) => {
   .then(results=> console.log(JSON.stringify(results[0],null,2)))
   .catch(err => {
     console.error(err);
-  });  
+  }); 
+}); 
 // Delete an item
 router.delete('/:id', (req, res, next) => {
   const id = req.params.id;
@@ -102,8 +101,9 @@ router.delete('/:id', (req, res, next) => {
   knex('notes')
   .where('notes.id', iD)
   .del()
-  .then(()=> console.log('success'))
+  .then(()=> res.sendStatus(204))
   .catch(err => {
     console.error(err);
   });
+});
 module.exports = router;
