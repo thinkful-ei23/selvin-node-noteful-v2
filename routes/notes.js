@@ -22,12 +22,8 @@ router.get('/', (req, res, next) => {
       }
     })
     .orderBy('notes.id')
-    .then(results => {
-      res.json(results);
-    })
-    .catch(err => {
-      next(err);
-    });
+    .then(results => res.json(results[0]))
+    .catch(err => {next(err)})
 });
 
 // Get a single item
@@ -37,13 +33,9 @@ router.get('/:id', (req, res, next) => {
   knex
   .select('notes.id', 'title', 'content')
   .from('notes')
-  .where('notes.id', iD)
-  .then(results => {
-    console.log(JSON.stringify(results[0], null, 2));
-  })
-  .catch(err => {
-    console.error(err);
-  });
+  .where('notes.id', id)
+  .then(results => res.json(results[0]))
+  .catch(err => {next(err)})
 });
 // Put update an item
 router.put('/:id', (req, res, next) => {
@@ -71,9 +63,7 @@ router.put('/:id', (req, res, next) => {
     .where('notes.id', iD)
     .returning(['notes.id', 'title', 'content'])
     .then(results => res.json(results[0]))
-    .catch(err => {
-      console.error(err);
-    });
+    .catch(err => {next(err)})
   }); 
 // Post (insert) an item
 router.post('/', (req, res, next) => {
@@ -90,10 +80,8 @@ router.post('/', (req, res, next) => {
   knex('notes')
   .insert(newItem)
   .returning(['notes.id','title','content'])
-  .then(results=> console.log(JSON.stringify(results[0],null,2)))
-  .catch(err => {
-    console.error(err);
-  }); 
+  .then(results => res.json(results[0]))
+  .catch(err => {next(err)}) 
 }); 
 // Delete an item
 router.delete('/:id', (req, res, next) => {
@@ -103,9 +91,7 @@ router.delete('/:id', (req, res, next) => {
   .where('notes.id', iD)
   .del()
   .then(()=> res.sendStatus(204))
-  .catch(err => {
-    console.error(err);
-  });
+  .catch(err => {next(err)})
 });
 
 module.exports = router;
