@@ -44,6 +44,7 @@ router.get('/:id', (req, res, next) => {
   .catch(err => {
     console.error(err);
   });
+});
 // Put update an item
 router.put('/:id', (req, res, next) => {
   const id = req.params.id;
@@ -106,4 +107,5 @@ router.delete('/:id', (req, res, next) => {
     console.error(err);
   });
 });
+
 module.exports = router;
